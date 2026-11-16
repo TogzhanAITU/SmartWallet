@@ -252,7 +252,7 @@ namespace Budget_Summary.Tests
                 new EnrichedExpense("A", 10m, "A", true, 0, 5)
             };
             var pr = BudgetReports.BuildPriorityReport(tied, 0);
-            Assert.Equal(new[] { "A", "B" }, pr.Value.Rows.Select(r => r.Id)); // Score DESC → Amount DESC → Id ASC
+            Assert.Equal(new[] { "A", "B" }, pr.Value.Rows.Select(r => r.Id));
             var catTied = new[]
             {
                 new EnrichedExpense("1", 10m, "Z", true, 0, 0),

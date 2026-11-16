@@ -30,7 +30,6 @@ namespace Budget_Summary
 
     public static class Scoring
     {
-        // Curried: Func<ScoreConfig, Func<EnrichedExpense, int>>
         public static Func<ScoreConfig, Func<EnrichedExpense, int>> CreateScore() =>
             config => expense =>
                 (int)(expense.Amount * config.AmountWeight)

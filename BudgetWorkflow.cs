@@ -5,7 +5,6 @@ using System.Text.Json;
 
 namespace Budget_Summary
 {
-    // ───── Pure workflow states (explicit transitions) ─────
     public record ExpenseDraft(decimal Amount, bool IsMandatory);
     public record ValidatedExpense(decimal Amount, bool IsMandatory);
     public record TaxedExpense(decimal Amount, decimal TaxAmount);
@@ -26,10 +25,8 @@ namespace Budget_Summary
         }
     }
 
-    // ───── Structured domain error ─────
     public record DomainError(string Code, string Message);
 
-    // ───── Result<T, E> with Match / Handle / Value / Error ─────
     public class Result<T, E>
     {
         private readonly T _value;
@@ -60,14 +57,12 @@ namespace Budget_Summary
             : throw new InvalidOperationException("Cannot read Error from a successful Result.");
     }
 
-    // ───── Maybe<T> — sealed Some/None ─────
     public abstract class Maybe<T>
     {
         public sealed class Some(T value) : Maybe<T> { public T Value { get; } = value; }
         public sealed class None : Maybe<T> { }
     }
 
-    // ───── Data record (parallel to OrderRecord) ─────
     public record ExpenseRecord(string Id, decimal Amount)
     {
         public string Category { get; init; } = "Uncategorized";
@@ -76,7 +71,6 @@ namespace Budget_Summary
         public DateTime CreatedAt { get; init; } = DateTime.UnixEpoch;
     }
 
-    // ───── Pure workflow pipeline ─────
     public static class BudgetWorkflow
     {
         public static ExpenseDraft Start(decimal amount, bool isMandatory = false) =>
@@ -153,7 +147,6 @@ namespace Budget_Summary
         }
     }
 
-    // ───── Boundary: file loading + streamed enumeration ─────
     public static class ExpenseDataRepository
     {
         public static Result<List<ExpenseRecord>, DomainError> LoadFromJson(string filePath)
@@ -207,7 +200,6 @@ namespace Budget_Summary
         }
     }
 
-    // ───── Maybe-based policy lookup ─────
     public static class TaxPolicyLookup
     {
         private static readonly Dictionary<string, (decimal Rate, decimal Multiplier)> _policies = new()
