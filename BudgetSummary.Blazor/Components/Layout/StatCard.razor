@@ -1,0 +1,13 @@
+<div class="stat-card">
+    <div class="stat-icon">@Icon</div>
+    <div class="stat-body">
+        <div class="stat-label">@Label</div>
+        <div class="stat-value">@Value</div>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Label { get; set; } = "";
+    [Parameter, EditorRequired] public string Value { get; set; } = "";
+    [Parameter] public string Icon { get; set; } = "💰";
+}

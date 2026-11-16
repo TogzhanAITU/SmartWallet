@@ -1,0 +1,41 @@
+@inject BudgetState State
+
+@if (!State.Expenses.Any())
+{
+    <p class="muted">No expenses yet. Add one above.</p>
+}
+else
+{
+    <div class="table-wrap">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th><th>Id</th><th>Category</th>
+                    <th>Amount</th><th>Mandatory</th><th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @for (var i = 0; i < State.Expenses.Count; i++)
+            {
+                var e = State.Expenses[i];
+                var idx = i;
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td><code>@e.Id</code></td>
+                    <td>@e.Category</td>
+                    <td>@e.Amount.ToString("C")</td>
+                    <td>
+                        <span class="badge @(e.IsMandatory ? "badge-warn" : "badge-neutral")">
+                            @(e.IsMandatory ? "Yes" : "No")
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm"
+                                @onclick="() => State.RemoveAt(idx)">Delete</button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

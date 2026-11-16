@@ -1,0 +1,37 @@
+@{
+    var result = Result;
+}
+
+@if (!result.IsSuccess)
+{
+    <ResultBanner Kind="error" Message="@($"[{result.Error.Code}] {result.Error.Message}")" />
+}
+else if (result.Value.Rows.Count > 0)
+{
+    var report = result.Value;
+    <div class="card">
+        <h3>Category Summary <span class="muted">(native tax applied at @TaxBps bps)</span></h3>
+        @foreach (var row in report.Rows)
+        {
+            var pct = report.GrandTotal > 0
+                ? (double)(row.TotalAmount / report.GrandTotal * 100m)
+                : 0;
+            <div class="cat-row">
+                <div class="cat-head">
+                    <span>@row.Category</span>
+                    <span>@row.TotalAmount.ToString("C") · @row.ExpenseCount · tax=@(row.TotalTaxCents)¢</span>
+                </div>
+                <div class="bar"><div class="bar-fill" style="width:@(pct)%"></div></div>
+            </div>
+        }
+        <div style="text-align:right; margin-top:1rem;">
+            <strong>Grand Total: @report.GrandTotal.ToString("C")</strong>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public Result<CategorySummaryReport, DomainError> Result { get; set; } = default!;
+    [Parameter] public int TaxBps { get; set; } = 0;
+}

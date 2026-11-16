@@ -1,0 +1,39 @@
+@page "/"
+@inject BudgetState State
+@implements IDisposable
+
+<PageTitle>Dashboard · Budget Summary</PageTitle>
+<h1 class="page-title">Dashboard</h1>
+
+@if (!State.Expenses.Any())
+{
+    <div class="empty">
+        <div class="empty-icon">📋</div>
+        <h2>No expenses yet</h2>
+        <p>Add your first expense, or load sample data to explore.</p>
+        <div style="display:flex; gap:.75rem; justify-content:center; margin-top:1rem;">
+            <NavLink href="expenses" class="btn btn-primary">Add Expense →</NavLink>
+            <button class="btn btn-secondary" @onclick="State.LoadSampleData">Load Sample Data</button>
+        </div>
+    </div>
+}
+else
+{
+    <div class="stat-grid">
+        <StatCard Label="Total Spent"     Value="@Total.ToString("C")"       Icon="💵" />
+        <StatCard Label="Transactions"    Value="@State.Expenses.Count.ToString()" Icon="📊" />
+        <StatCard Label="Categories"      Value="@State.Expenses.Select(e => e.Category).Distinct().Count().ToString()" Icon="🏷️" />
+        <StatCard Label="Mandatory Total" Value="@MandatoryTotal.ToString("C")" Icon="⭐" />
+    </div>
+
+    <CategorySummary Result="@State.CategoryReport()" TaxBps="@State.TaxBps" />
+}
+
+@code {
+    private decimal Total          => State.Expenses.Sum(e => e.Amount);
+    private decimal MandatoryTotal => State.Expenses.Where(e => e.IsMandatory).Sum(e => e.Amount);
+
+    protected override void OnInitialized() => State.OnChange += HandleChange;
+    private void HandleChange() => InvokeAsync(StateHasChanged);
+    public void Dispose() => State.OnChange -= HandleChange;
+}

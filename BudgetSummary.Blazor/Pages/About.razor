@@ -1,0 +1,21 @@
+@page "/about"
+<PageTitle>About · Budget Summary</PageTitle>
+<h1 class="page-title">About</h1>
+
+<div class="card">
+    <p><strong>Budget Summary</strong> is a cross-platform budget analyzer built on
+    <strong>Blazor WebAssembly</strong> with a <strong>functional core</strong>.</p>
+
+    <h3 style="margin-top:1rem;">Architecture</h3>
+    <ul>
+        <li><code>Result&lt;T, DomainError&gt;</code> — railway-oriented error handling; no exceptions in the domain.</li>
+        <li><code>Maybe&lt;T&gt;</code> — explicit optional values (sealed <code>Some</code>/<code>None</code>).</li>
+        <li><code>BudgetWorkflow</code> — pure state machine: <code>Draft → Validated → Taxed → Receipt</code>.</li>
+        <li><code>BudgetWorkflowRunner.EnrichExpenses</code> — composes validation + native tax + curried scoring.</li>
+        <li><code>Scoring.CreateScore()</code> — curried, so you can swap score configs on the same data.</li>
+        <li>Native tax via P/Invoke on desktop; <strong>pure managed fallback</strong> in the browser.</li>
+    </ul>
+
+    <p style="margin-top:1rem;">The same core assembly is exercised by <strong>24 xUnit tests</strong>
+    via <code>dotnet test</code> in the console project.</p>
+</div>

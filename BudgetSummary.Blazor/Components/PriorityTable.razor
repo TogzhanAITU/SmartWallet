@@ -1,0 +1,50 @@
+@{
+    var result = Result;
+}
+
+@if (!result.IsSuccess)
+{
+    <ResultBanner Kind="error" Message="@($"[{result.Error.Code}] {result.Error.Message}")" />
+}
+else
+{
+    var report = result.Value;
+    <div class="card">
+        <h3>Priority Orders (min score = @MinScore)</h3>
+        @if (report.Rows.Count == 0)
+        {
+            <p class="muted">No rows meet the minimum score.</p>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr><th>#</th><th>Id</th><th>Category</th>
+                            <th>Amount</th><th>Tax</th><th>Score</th></tr>
+                    </thead>
+                    <tbody>
+                    @for (var i = 0; i < report.Rows.Count; i++)
+                    {
+                        var r = report.Rows[i];
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td><code>@r.Id</code></td>
+                            <td>@r.Category</td>
+                            <td>@r.Amount.ToString("C")</td>
+                            <td>@(r.TaxCents)¢</td>
+                            <td><span class="badge badge-info">@r.Score</span></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public Result<PriorityReport, DomainError> Result { get; set; } = default!;
+    [Parameter] public int MinScore { get; set; } = 0;
+}

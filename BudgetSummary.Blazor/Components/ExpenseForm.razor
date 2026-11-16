@@ -1,0 +1,69 @@
+@inject BudgetState State
+
+<div class="card">
+    <h3>Add Expense</h3>
+    <EditForm Model="model" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <div class="form-grid">
+            <div class="field">
+                <label>Category</label>
+                <InputText @bind-Value="model.Category" class="input" placeholder="e.g. Groceries" />
+            </div>
+            <div class="field">
+                <label>Amount ($)</label>
+                <InputNumber @bind-Value="model.Amount" class="input" step="0.01" />
+            </div>
+            <div class="field field-check">
+                <label class="check">
+                    <InputCheckbox @bind-Value="model.IsMandatory" />
+                    <span>Mandatory</span>
+                </label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">+ Add Expense</button>
+    </EditForm>
+    <ResultBanner Kind="error" Message="@errorMessage" />
+    <ResultBanner Kind="success" Message="@successMessage" />
+</div>
+
+@code {
+    private FormModel model = new();
+    private string? errorMessage;
+    private string? successMessage;
+
+    private void HandleSubmit()
+    {
+        var expense = new ExpenseRecord(
+            "EXP-" + Guid.NewGuid().ToString()[..6].ToUpperInvariant(),
+            model.Amount)
+        {
+            Category = model.Category,
+            IsMandatory = model.IsMandatory
+        };
+
+        var result = State.AddExpense(expense);
+
+        if (!result.IsSuccess)
+        {
+            errorMessage   = $"[{result.Error.Code}] {result.Error.Message}";
+            successMessage = null;
+        }
+        else
+        {
+            errorMessage   = null;
+            successMessage = $"Added '{expense.Category}' (${expense.Amount:F2}) as {expense.Id}";
+            model = new();
+        }
+    }
+
+    public class FormModel
+    {
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Category is required")]
+        public string Category { get; set; } = "";
+
+        [System.ComponentModel.DataAnnotations.Range(0.01, double.MaxValue, ErrorMessage = "Amount must be > 0")]
+        public decimal Amount { get; set; }
+
+        public bool IsMandatory { get; set; }
+    }
+}
