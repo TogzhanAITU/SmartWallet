@@ -1,4 +1,4 @@
-﻿# Budget Summary — Functional Pipeline, Native Tax & Deferred Reports
+# Budget Summary — Functional Pipeline, Native Tax & Deferred Reports
 
 This is a C#/.NET console + xUnit project that demonstrates a **functional
 pipeline for expense processing** with a real native C call, deferred LINQ,
