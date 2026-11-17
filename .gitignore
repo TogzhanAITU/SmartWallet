@@ -11,7 +11,7 @@ Budget_Summary/bin
 *.suo
 
 **/native/*.so
-**/native/*.dll
+!**/native/budget_native.dll
 **/native/*.dylib
 
 **/category-report.csv
