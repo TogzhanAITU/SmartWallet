@@ -3,19 +3,44 @@
 <h1 class="page-title">About</h1>
 
 <div class="card">
-    <p><strong>Budget Summary</strong> is a cross-platform budget analyzer built on
-    <strong>Blazor WebAssembly</strong> with a <strong>functional core</strong>.</p>
-
-    <h3 style="margin-top:1rem;">Architecture</h3>
+    <p>
+        Final project for the C#/.NET course. Two projects in one repo:
+    </p>
     <ul>
-        <li><code>Result&lt;T, DomainError&gt;</code> — railway-oriented error handling; no exceptions in the domain.</li>
-        <li><code>Maybe&lt;T&gt;</code> — explicit optional values (sealed <code>Some</code>/<code>None</code>).</li>
-        <li><code>BudgetWorkflow</code> — pure state machine: <code>Draft → Validated → Taxed → Receipt</code>.</li>
-        <li><code>BudgetWorkflowRunner.EnrichExpenses</code> — composes validation + native tax + curried scoring.</li>
-        <li><code>Scoring.CreateScore()</code> — curried, so you can swap score configs on the same data.</li>
-        <li>Native tax via P/Invoke on desktop; <strong>pure managed fallback</strong> in the browser.</li>
+        <li>
+            <code>Budget_Summary/</code> - console app with the workflow,
+            24 xUnit tests, and the native tax call
+        </li>
+        <li>
+            <code>BudgetSummary.Blazor/</code> - the web UI you're looking at,
+            sitting on top of the same core
+        </li>
     </ul>
 
-    <p style="margin-top:1rem;">The same core assembly is exercised by <strong>24 xUnit tests</strong>
-    via <code>dotnet test</code> in the console project.</p>
+    <p>
+        The tax fee is calculated in C. On Linux it's built from
+        <code>native/budget_native.c</code> by <code>build.sh</code>. On Windows
+        there's a pre-compiled <code>budget_native.dll</code> checked in. The
+        Blazor version can't load either one, so it uses
+        <code>ManagedTaxFeeAdapter</code> - a straight C# port of the same
+        formula, same rounding, same test value.
+    </p>
+
+    <p>
+        Core logic returns <code>Result&lt;T, DomainError&gt;</code> rather than
+        throwing. The scoring rule is a curried function, so the Reports page
+        can swap between conservative and aggressive configs without touching
+        the runner.
+    </p>
+
+    <p>
+        <strong>Run the tests:</strong> <code>dotnet test</code><br />
+        <strong>Run the UI:</strong> <code>dotnet run --project BudgetSummary.Blazor</code>
+    </p>
+
+    <p>
+        <a href="https://github.com/TogzhanAITU/SmartWallet" target="_blank" rel="noopener">
+            Source on GitHub
+        </a>
+    </p>
 </div>

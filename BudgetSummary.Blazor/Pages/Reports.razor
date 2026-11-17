@@ -9,10 +9,10 @@
 {
     <div class="empty">
         <div class="empty-icon">📈</div>
-        <h2>No data yet</h2>
-        <p>Add expenses (or load sample data) to generate reports.</p>
+        <h2>Nothing to report yet</h2>
+        <p>Add an expense, or load the sample data - both reports will fill in from there.</p>
         <div style="display:flex; gap:.75rem; justify-content:center; margin-top:1rem;">
-            <NavLink href="expenses" class="btn btn-primary">Add Expense →</NavLink>
+            <NavLink href="expenses" class="btn btn-primary">Add Expense -></NavLink>
             <button class="btn btn-secondary" @onclick="State.LoadSampleData">Load Sample Data</button>
         </div>
     </div>
@@ -49,7 +49,7 @@ else
     </div>
 
     <div class="card">
-        <h3>Tax Policy Comparison <span class="muted">(per TaxPolicyLookup + ApplyTaxPolicy)</span></h3>
+        <h3>Totals under each tax policy</h3>
         <div class="policy-grid">
             @foreach (var policy in new[] { "Standard", "Discount", "Increase" })
             {
